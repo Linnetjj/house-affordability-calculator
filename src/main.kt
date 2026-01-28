@@ -1,29 +1,14 @@
 fun main() {
     println("=== Housing Planner ===")
 
-    print("Ange total hushållsinkomst per månad (före skatt): ")
-    val income = readLine()!!.toDouble()
-
-    print("Ange antal vuxna i hushållet: ")
-    val adults = readLine()!!.toInt()
-
-    print("Ange antal barn (0–10 år): ")
-    val childrenYoung = readLine()!!.toInt()
-
-    print("Ange antal barn (10–20 år): ")
-    val childrenOld = readLine()!!.toInt()
-
-    print("Ange sparat kapital (kontantinsats): ")
-    val savings = readLine()!!.toDouble()
-
-    print("Ange andra inkomster per månad (bidrag, bonus): ")
-    val otherIncome = readLine()!!.toDouble()
-
-    print("Ange månatliga utgifter (exkl. boende): ")
-    val monthlyExpenses = readLine()!!.toDouble()
-
-    print("Ange huspris: ")
-    val housePrice = readLine()!!.toDouble()
+val income = readDouble("Ange total hushållsinkomst per månad (före skatt): ")
+val adults = readInt("Ange antal vuxna i hushållet: ")
+val childrenYoung = readInt("Ange antal barn (0–10 år): ")
+val childrenOld = readInt("Ange antal barn (10–20 år): ")
+val savings = readDouble("Ange sparat kapital (kontantinsats): ")
+val otherIncome = readDouble("Ange andra inkomster per månad (bidrag, bonus): ")
+val monthlyExpenses = readDouble("Ange månatliga utgifter (exkl. boende): ")
+val housePrice = readDouble("Ange huspris: ")
 
     // ---- Grunddata ----
     val taxRate = 0.30
@@ -63,4 +48,28 @@ fun main() {
 
 fun formatCurrency(amount: Double): String {
     return "%,.0f kr".format(amount)
+}
+
+fun readDouble(prompt: String): Double {
+    while (true) {
+        print(prompt)
+        val input = readLine()
+        try {
+            return input!!.replace(",", ".").toDouble()
+        } catch (e: Exception) {
+            println("❌ Ogiltigt värde, försök igen.")
+        }
+    }
+}
+
+fun readInt(prompt: String): Int {
+    while (true) {
+        print(prompt)
+        val input = readLine()
+        try {
+            return input!!.toInt()
+        } catch (e: Exception) {
+            println("❌ Ogiltigt värde, försök igen.")
+        }
+    }
 }
