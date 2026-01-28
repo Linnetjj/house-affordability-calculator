@@ -25,13 +25,33 @@ fun main() {
     print("Ange huspris: ")
     val housePrice = readLine()!!.toDouble()
 
-    println("\n--- Sammanfattning ---")
-    println("Inkomst: $income kr")
-    println("Vuxna: $adults")
-    println("Barn 0–10: $childrenYoung")
-    println("Barn 10–20: $childrenOld")
-    println("Sparat kapital: $savings kr")
-    println("Andra inkomster: $otherIncome kr")
-    println("Utgifter: $monthlyExpenses kr")
-    println("Huspris: $housePrice kr")
+    // ---- Ekonomisk logik ----
+
+    val taxRate = 0.30
+    val childCostYoung = 5000
+    val childCostOld = 7000
+
+    val totalIncome = income + otherIncome
+    val tax = totalIncome * taxRate
+
+    val childrenCost =
+        (childrenYoung * childCostYoung) +
+        (childrenOld * childCostOld)
+
+    val disposableIncome =
+        totalIncome - tax - childrenCost - monthlyExpenses
+
+    val loanAmount = housePrice - savings
+
+    println("\n--- Ekonomisk sammanfattning ---")
+    println("Total inkomst: ${formatCurrency(totalIncome)}")
+    println("Skatt (30 %): ${formatCurrency(tax)}")
+    println("Barnkostnader: ${formatCurrency(childrenCost.toDouble())}")
+    println("Disponibel inkomst före boende: ${formatCurrency(disposableIncome)}")
+    println("Lånebelopp: ${formatCurrency(loanAmount)}")
+}
+
+// Hjälpfunktion för snygg utskrift
+fun formatCurrency(amount: Double): String {
+    return "%,.0f kr".format(amount)
 }
