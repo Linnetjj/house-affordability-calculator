@@ -12,8 +12,9 @@ val housePrice = readDouble("Ange huspris: ")
 
     // ---- Grunddata ----
     val taxRate = 0.30
-    val childCostYoung = 4000
-    val childCostOld = 6000
+    val childCostYoung = readDouble("Ange kostnad per barn (0–10 år) per månad: ")
+    val childCostOld = readDouble("Ange kostnad per barn (10–20 år) per månad: ")
+
 
     val totalIncome = income + otherIncome
     val tax = totalIncome * taxRate
@@ -30,21 +31,31 @@ val housePrice = readDouble("Ange huspris: ")
 
     val interestRates = listOf(0.02, 0.04, 0.06, 0.08)
 
-    println("\n--- Resultat per räntescenario ---")
+    val loanTermMonths = 30 * 12  // 30 år
+    val monthlyAmortization = loanAmount / loanTermMonths
 
-    for (rate in interestRates) {
-        val monthlyInterestCost = (loanAmount * rate) / 12
-        val remainingAfterHousing = disposableIncome - monthlyInterestCost
-        val remainingPerPerson = remainingAfterHousing / totalPeople
-        val decision = if (remainingAfterHousing > 0) "JA" else "NEJ"
+println("\n--- Resultat per räntescenario ---")
+println(String.format("%-7s %-20s %-20s %-20s %-10s", "Ränta", "Boendekostnad", "Kvar efter boende", "Kvar per person", "Klarar?"))
 
-        println("\nRänta: ${(rate * 100).toInt()} %")
-        println("Boendekostnad/mån: ${formatCurrency(monthlyInterestCost)}")
-        println("Kvar efter boende: ${formatCurrency(remainingAfterHousing)}")
-        println("Kvar per person: ${formatCurrency(remainingPerPerson)}")
-        println("Klarar vi detta? $decision")
-    }
+for (rate in interestRates) {
+    val monthlyInterestCost = (loanAmount * rate) / 12
+    val totalMonthlyHousing = monthlyInterestCost + monthlyAmortization
+    val remainingAfterHousing = disposableIncome - totalMonthlyHousing
+    val remainingPerPerson = remainingAfterHousing / totalPeople
+    val decision = if (remainingAfterHousing > 0) "JA" else "NEJ"
+
+    println(
+        String.format(
+            "%-7s %-20s %-20s %-20s %-10s",
+            "${(rate * 100).toInt()} %",
+            formatCurrency(totalMonthlyHousing),
+            formatCurrency(remainingAfterHousing),
+            formatCurrency(remainingPerPerson),
+            decision
+        )
+    )
 }
+
 
 fun formatCurrency(amount: Double): String {
     return "%,.0f kr".format(amount)
