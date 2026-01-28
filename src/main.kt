@@ -25,11 +25,10 @@ fun main() {
     print("Ange huspris: ")
     val housePrice = readLine()!!.toDouble()
 
-    // ---- Ekonomisk logik ----
-
+    // ---- Grunddata ----
     val taxRate = 0.30
-    val childCostYoung = 5000
-    val childCostOld = 7000
+    val childCostYoung = 4000
+    val childCostOld = 6000
 
     val totalIncome = income + otherIncome
     val tax = totalIncome * taxRate
@@ -42,16 +41,26 @@ fun main() {
         totalIncome - tax - childrenCost - monthlyExpenses
 
     val loanAmount = housePrice - savings
+    val totalPeople = adults + childrenYoung + childrenOld
 
-    println("\n--- Ekonomisk sammanfattning ---")
-    println("Total inkomst: ${formatCurrency(totalIncome)}")
-    println("Skatt (30 %): ${formatCurrency(tax)}")
-    println("Barnkostnader: ${formatCurrency(childrenCost.toDouble())}")
-    println("Disponibel inkomst före boende: ${formatCurrency(disposableIncome)}")
-    println("Lånebelopp: ${formatCurrency(loanAmount)}")
+    val interestRates = listOf(0.02, 0.04, 0.06, 0.08)
+
+    println("\n--- Resultat per räntescenario ---")
+
+    for (rate in interestRates) {
+        val monthlyInterestCost = (loanAmount * rate) / 12
+        val remainingAfterHousing = disposableIncome - monthlyInterestCost
+        val remainingPerPerson = remainingAfterHousing / totalPeople
+        val decision = if (remainingAfterHousing > 0) "JA" else "NEJ"
+
+        println("\nRänta: ${(rate * 100).toInt()} %")
+        println("Boendekostnad/mån: ${formatCurrency(monthlyInterestCost)}")
+        println("Kvar efter boende: ${formatCurrency(remainingAfterHousing)}")
+        println("Kvar per person: ${formatCurrency(remainingPerPerson)}")
+        println("Klarar vi detta? $decision")
+    }
 }
 
-// Hjälpfunktion för snygg utskrift
 fun formatCurrency(amount: Double): String {
     return "%,.0f kr".format(amount)
 }
